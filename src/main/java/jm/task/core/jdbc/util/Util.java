@@ -3,15 +3,11 @@ package jm.task.core.jdbc.util;
 
 
 import jm.task.core.jdbc.model.User;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 import java.sql.*;
-import java.util.Properties;
 
 public class Util  {
 
@@ -20,24 +16,23 @@ public class Util  {
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Zmalqp1092";
 
-    Connection connection;
 
     public Connection getConnection() {
+
         try {
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            return connection;
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
-        return connection;
+
     }
 
 
     // Hibernate
 
     private static final SessionFactory sessionFactory;
-
-    private Session session;
-    private Transaction transaction;
 
     static {
         try {
@@ -64,25 +59,5 @@ public class Util  {
         return sessionFactory;
     }
 
-
-    public Session openTransactionSession() {
-        session = getSessionFactory().openSession();
-        transaction = session.beginTransaction();
-        return session;
-    }
-
-    public Session getSession() {
-        return session;
-    }
-
-
-    public void closeSession() {
-        session.close();
-    }
-
-    public void closeTransactionSession() {
-        transaction.commit();
-        closeSession();
-    }
 }
 
